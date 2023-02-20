@@ -328,13 +328,13 @@ workflows:
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
-      - run-migrations:
+      # - run-migrations:
+      #     requires:
+      #       - configure-infrastructure
+      - deploy-frontend:
           requires:
             - configure-infrastructure
-      - deploy-frontend:
-          requires:
-            - run-migrations
-      - deploy-frontend:
+      - deploy-backend:
           requires: 
-            - run-migrations     
+            - configure-infrastructure  
       
