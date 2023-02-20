@@ -150,15 +150,14 @@ jobs:
           name: Install tar utility
           command: yum install -y tar gzip
       - run: cat .circleci/ansible/inventory.txt
-      
+
       - run: 
           name: update-inventory
           command: 
-            cd .circleci/ansible/
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople" \
-            --output text >> inventory.txt
+            --output text >> .circleci/ansible/inventory.txt
       
 
       - run: cat .circleci/ansible/inventory.txt
