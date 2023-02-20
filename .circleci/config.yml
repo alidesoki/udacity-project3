@@ -155,6 +155,7 @@ jobs:
           command: 
             cd ~/project/.circleci/ansible
             ~/project/.circleci/ansible/createinventory.sh
+            ls ~/project/.circleci/ansible/
 
       - run: cat ~/project/.circleci/ansible/inventory.txt
 
@@ -184,7 +185,7 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
- 
+      - destroy-infrastructure
 
   # deploy-frontend:
   #   docker:
