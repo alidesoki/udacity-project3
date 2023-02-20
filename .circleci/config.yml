@@ -23,6 +23,12 @@ commands:
             aws aws s3 rb s3://"${CIRCLE_WORKFLOW_ID:0:7}" --force 
             aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 jobs: 
+  Destroying-old-environment:
+    docker:
+      - image: amazon/aws-cli
+    steps:  
+      - destroy-frontend
+      - destroy-backend
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -135,7 +141,7 @@ jobs:
       - run: 
           name: update-inventory
           command: ./createinventory.sh
-          
+
       - run: cat inventory.txt
 
       - persist_to_workspace:
@@ -161,6 +167,7 @@ jobs:
             --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
             --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
             --tags project=udapeople
+      - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
       - destroy-infrastructure
       - destroy-frontend
      
