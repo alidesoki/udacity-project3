@@ -176,7 +176,7 @@ jobs:
           name: install ansible
           command: apk add --update ansible
       
-      - run: cat ~/.circleci/ansible/inventory.txt
+      - run: cat ~/project/.circleci/ansible/inventory.txt
       - run:
           name: run playbook
           command: |
