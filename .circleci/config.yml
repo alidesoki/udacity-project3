@@ -3,6 +3,25 @@ version: 2.1
 orbs:
   slack: circleci/slack@4.12.1
 
+commands:
+  destroy-infrastructure:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.  
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+  
+  destroy-frontend:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.  
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws aws s3 rb s3://"${CIRCLE_WORKFLOW_ID:0:7}" --force 
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 jobs: 
   build-frontend:
     docker:
@@ -92,6 +111,59 @@ jobs:
           npm audit fix --audit-level=critical --force
           npm audit fix --force
           npm audit --audit-level=critical
+  
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    
+    steps:
+      - checkout
+
+      - run: 
+          name: Deploy backend infrastructure
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/backend.yml \
+            --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+
+      - run:
+          name: Install tar utility
+          command: yum install -y tar gzip
+      
+      - run: 
+          name: update-inventory
+          command: ./createinventory.sh
+
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - inventory.txt
+
+      - destroy-infrastructure
+ 
+
+deploy-frontend:
+    docker:
+      - image: amazon/aws-cli
+    
+    steps:
+      - checkout
+
+      - run: 
+          name: Deploy backend infrastructure
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      
+      - destroy-frontend
+     
+
+
 
 workflows:
   project-workflow:
@@ -110,3 +182,4 @@ workflows:
       - audit-backend:
           requires:
             - test-backend
+      - deploy-infrastructure
