@@ -152,7 +152,9 @@ jobs:
       
       - run: 
           name: update-inventory
-          command: ./createinventory.sh
+          command: 
+            cd ~/project/.circleci/ansible
+            ~/project/.circleci/ansible/createinventory.sh
 
       - run: cat inventory.txt
 
