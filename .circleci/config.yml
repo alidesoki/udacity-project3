@@ -154,7 +154,11 @@ jobs:
           name: update-inventory
           command: 
             cd ~/project/.circleci/ansible
-            ~/project/.circleci/ansible/createinventory.sh
+            echo [all] > inventory.txt
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=udapeople" \
+            --output text >> inventory.txt
             ls ~/project/.circleci/ansible/
 
       - run: cat ~/project/.circleci/ansible/inventory.txt
