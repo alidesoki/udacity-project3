@@ -155,12 +155,12 @@ jobs:
           name: update-inventory
           command: |
             cd .circleci/ansible
+            echo [web] > inventory.txt
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople" \
             --output text >> inventory.txt
-      
-
+    
       - run: cat .circleci/ansible/inventory.txt
 
       - persist_to_workspace:
