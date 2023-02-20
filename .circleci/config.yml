@@ -144,7 +144,7 @@ jobs:
       - destroy-infrastructure
  
 
-deploy-frontend:
+  deploy-frontend:
     docker:
       - image: amazon/aws-cli
     
