@@ -228,9 +228,6 @@ workflows:
       - deploy-infrastructure:
           requires:
             - get_last_deployment_id
-      - deploy-frontend:
-          requires:
-            - deploy-infrastructure
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
