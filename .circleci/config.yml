@@ -123,8 +123,8 @@ jobs:
           command: |
             aws cloudformation \
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --no-paginate --output text > ~/textfile.txt
-      - run: cat ~/textfile.txt
+            --no-paginate --output text > ~/project/textfile.txt
+      - run: cat ~/project/textfile.txt
       - persist_to_workspace:
           root: ~/
           paths: 
