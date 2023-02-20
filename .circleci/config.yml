@@ -135,6 +135,8 @@ jobs:
       - run: 
           name: update-inventory
           command: ./createinventory.sh
+          
+      - run: cat inventory.txt
 
       - persist_to_workspace:
           root: ./
