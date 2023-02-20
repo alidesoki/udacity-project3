@@ -1,0 +1,19 @@
+---
+  - name: copy index
+    become: true
+    copy:
+      src: ~/project/artifact.tar.gz
+      dest: ~/
+ 
+  - name: extract
+    become: true
+    shell: tar -zxvf ~/project/artifact.tar.gz
+  
+  - name: install
+    become: true
+    shell: |
+      npm install
+      pm2 stop default
+      pm2 start npm -- start
+
+  
