@@ -9,32 +9,28 @@
     apt:
       upgrade: yes
     
-  - name: "install python for Ansible."
-    # Your code here
+  - name: "install dependencies."
     become: true
-    raw: test -e /usr/bin/python3 || (apt -y update && apt install -y python3)
-    changed_when: false
+    apt:
+      name: ["nodejs", "npm"]
+      state: latest
+      update_cache: yes
 
-  - name: install NodeJs
+  - name: "install n"
     become: true
-    shell: |
-      curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-      sudo apt install -y nodejs
-      sudo npm install -g n
-      sudo n 13.8.0
-      
-  - name: install build essential
+    npm:
+      name: n
+      global: yes
+      production: yes
+
+  - name: "install nodejs 13.8.0"
     become: true
-    apt: 
-      name: build-essential
+    shell: n 12.20.1
+
+  - name: "install pm2"
+    become: true
+    npm:
+      name: pm2
+      global: yes
+      production: yes
       state: present
-  
-  - name: install npm
-    become: true
-    shell: npm install -g npm@6.13.6
-      
-  
-  - name: install PM2
-    become: true
-    shell: npm install pm2 -g
-      
