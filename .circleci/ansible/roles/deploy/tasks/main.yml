@@ -7,7 +7,7 @@
  
   - name: extract
     become: true
-    shell: tar -zxvf ~/project/artifact.tar.gz
+    shell: tar -zxvf ~/artifact.tar.gz
   
   - name: install
     become: true
