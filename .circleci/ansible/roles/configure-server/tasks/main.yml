@@ -32,7 +32,7 @@
 
   - name: "install nodejs 13.8.0"
     become: true
-    shell: n 12.20.1
+    shell: n 13.8.0
 
   - name: "install pm2"
     become: true
