@@ -12,26 +12,26 @@
   - name: install python
     become: true
     apt: 
-      name: python3
-      state: present
+      name: python3=2.7.3
+      #state: present
 
   - name: install NodeJs
     become: true
     apt: 
-      name: nodejs
-      state: present
+      name: nodejs=13.8.0
+      #state: present
 
   - name: install build essential
     become: true
     apt: 
       name: build-essential
-      state: present
+      #state: present
   
   - name: install npm
     become: true
     apt: 
-      name: npm
-      state: present
+      name: npm=6.13.6
+      #state: present
   
   - name: install PM2
     become: true
