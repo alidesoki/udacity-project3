@@ -12,26 +12,27 @@
   - name: install python
     become: true
     apt: 
-      name: python3=2.7.3
-      #state: present
+      name: python3
+      state: present
 
   - name: install NodeJs
     become: true
-    apt: 
-      name: nodejs=13.8.0
-      #state: present
-
+    shell: |
+      curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+      sudo apt install -y nodejs
+      sudo npm install -g n
+      sudo n 13.8.0
   - name: install build essential
     become: true
     apt: 
       name: build-essential
-      #state: present
+      state: present
   
   - name: install npm
     become: true
     apt: 
-      name: npm=6.13.6
-      #state: present
+      name: npm
+      state: present
   
   - name: install PM2
     become: true
