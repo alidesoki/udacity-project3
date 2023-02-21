@@ -390,6 +390,9 @@ workflows:
       - deploy-backend:
           requires: 
             - run-migrations
-            - configure-infrastructure
+      - frontend-smoke-test:
+          requires:
             - deploy-frontend
-      
+      - backend-smoke-test:
+          requires:
+            - deploy-frontend
