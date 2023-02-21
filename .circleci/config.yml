@@ -172,7 +172,7 @@ jobs:
   
   configure-infrastructure:
     docker: 
-      - image: python:3.7-alpine3.11
+      - image: mareimorsy/aws-node
     steps: 
       - checkout
       - add_ssh_keys:
@@ -181,7 +181,7 @@ jobs:
           at: ~/
       - run:
           name: install ansible
-          command: apk add --update ansible
+          command: sudo apt install -y ansible python3 tar gzip
       
       - run: cat ~/project/.circleci/ansible/inventory.txt
       - run:
@@ -271,7 +271,7 @@ jobs:
      
   deploy-backend:
     docker: 
-      - image: python:3.7-alpine3.11
+      - image: mareimorsy/aws-node
     steps: 
       - checkout
       - add_ssh_keys:
@@ -281,13 +281,9 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: install ansible
-          command: apk add --update ansible
-      - run:
-          name: Install tar utility
-          command: |
-            apk add --update tar gzip
-            apk add --update nodejs npm
+          name: install dependcies 
+          command: apt install ansible python3 tar gzip
+      
       - run:
           name: deploy backend
           command: |
