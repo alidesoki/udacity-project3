@@ -172,7 +172,7 @@ jobs:
   
   configure-infrastructure:
     docker: 
-      - image: mareimorsy/aws-node
+      - image: python:3.9.16-alpine3.17
     steps: 
       - checkout
       - add_ssh_keys:
@@ -181,7 +181,7 @@ jobs:
           at: ~/
       - run:
           name: install ansible
-          command: sudo apt install -y ansible python3 tar gzip
+          command: apk add --update ansible
       
       - run: cat ~/project/.circleci/ansible/inventory.txt
       - run:
@@ -271,7 +271,7 @@ jobs:
      
   deploy-backend:
     docker: 
-      - image: mareimorsy/aws-node
+      - image: python:3.9.16-alpine3.17
     steps: 
       - checkout
       - add_ssh_keys:
@@ -281,9 +281,13 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: install dependcies 
-          command: apt install ansible python3 tar gzip
-      
+          name: install ansible
+          command: apk add --update ansible
+      - run:
+          name: Install tar utility
+          command: |
+            apk add --update tar gzip
+            apk add --update nodejs npm
       - run:
           name: deploy backend
           command: |
@@ -352,30 +356,30 @@ jobs:
 workflows:
   project-workflow:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires:
-      #       - build-frontend
-      # - test-backend:
-      #     requires:   
-      #       - build-backend
-      # - audit-frontend:
-      #     requires:
-      #       - test-frontend
-      # - audit-backend:
-      #     requires:
-      #       - test-backend
-      # - get_last_deployment_id:
-      #     requires: 
-      #       - audit-frontend
-      #       - audit-backend
-      - deploy-infrastructure
-          # requires:
-          #   - get_last_deployment_id
-      - create-s3-bucket
-          # requires:
-          #   - get_last_deployment_id 
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires:
+            - build-frontend
+      - test-backend:
+          requires:   
+            - build-backend
+      - audit-frontend:
+          requires:
+            - test-frontend
+      - audit-backend:
+          requires:
+            - test-backend
+      - get_last_deployment_id:
+          requires: 
+            - audit-frontend
+            - audit-backend
+      - deploy-infrastructure:
+          requires:
+            - get_last_deployment_id
+      - create-s3-bucket:
+          requires:
+            - get_last_deployment_id 
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
