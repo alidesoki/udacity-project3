@@ -22,6 +22,7 @@
       sudo apt install -y nodejs
       sudo npm install -g n
       sudo n 13.8.0
+      
   - name: install build essential
     become: true
     apt: 
@@ -30,9 +31,8 @@
   
   - name: install npm
     become: true
-    apt: 
-      name: npm
-      state: present
+    shell: npm install -g npm@6.13.6
+      
   
   - name: install PM2
     become: true
