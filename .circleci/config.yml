@@ -282,7 +282,7 @@ jobs:
      
   deploy-backend:
     docker: 
-      - image: python:3.9.16-alpine3.17
+      - image: python:3.7-alpine3.11
         environment:
           NODE_ENV: "production"
           VERSION: "1"
