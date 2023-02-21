@@ -9,6 +9,12 @@
     apt:
       upgrade: yes
     
+  - name: install python
+    become: true
+    apt: 
+      name: python3
+      state: present
+
   - name: install NodeJs
     become: true
     apt: 

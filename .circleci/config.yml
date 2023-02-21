@@ -300,6 +300,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
+            
   backend-smoke-test:
     docker:
       - image: circleci/node:13.8.0
@@ -346,6 +347,7 @@ jobs:
           # else
           #   return 1
           # fi
+      
       
 
 
