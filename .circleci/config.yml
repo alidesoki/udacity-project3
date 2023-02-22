@@ -174,17 +174,7 @@ jobs:
     docker: 
       - image: python:3.7-alpine3.11
      # - image: python:3.7.16-alpine3.17
-        environment:
-          NODE_ENV: "production"
-          VERSION: "1"
-          ENVIRONMENT: "production"
-          TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-          TYPEORM_HOST: $TYPEORM_HOST
-          TYPEORM_USERNAME: $TYPEORM_USERNAME
-          TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-          TYPEORM_DATABASE: $TYPEORM_DATABASE
-          TYPEORM_PORT: $TYPEORM_PORT
-          TYPEORM_ENTITIES: $TYPEORM_ENTITIES
+      
     steps: 
       - checkout
       - add_ssh_keys:
@@ -286,27 +276,59 @@ jobs:
       - destroy-infrastructure
       - destroy-frontend
      
-  deploy-backend:
-    docker: 
-      #- image: python:3.7.16-alpine3.17
-      - image: python:3.7-alpine3.11
+  # deploy-backend:
+  #   docker: 
+  #     #- image: python:3.7.16-alpine3.17
+  #     - image: python:3.7-alpine3.11
 
-    steps: 
+  #   steps: 
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints: [ed:f6:06:cd:4a:6c:7c:b5:97:b8:c4:f7:03:6b:a7:7d]
+  #     # - restore_cache:
+  #     #     keys: [backend-build]
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run:
+  #         name: install ansible
+  #         command: apk add --update ansible
+  #     - run:
+  #         name: Install tar utility
+  #         command: |
+  #           apk add --update tar gzip
+  #           apk add --update npm nodejs
+  #     - run:
+  #         name: deploy backend
+  #         command: |
+  #           cd backend
+  #           npm i
+  #           npm run build
+  #           cd ..
+  #           tar -C backend -czvf artifact.tar.gz .
+  #           cd .circleci/ansible
+  #           echo "Contents  of the inventory.txt file is -------"
+  #           cat inventory.txt
+  #           ansible-playbook -i inventory.txt deploy-backend.yml
+  deploy-backend:
+    docker:
+      - image: circleci/node
+    steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: [ed:f6:06:cd:4a:6c:7c:b5:97:b8:c4:f7:03:6b:a7:7d]
-      - restore_cache:
-          keys: [backend-build]
       - attach_workspace:
           at: ~/
+      - add_ssh_keys:
+          fingerprints: [ed:f6:06:cd:4a:6c:7c:b5:97:b8:c4:f7:03:6b:a7:7d]
       - run:
-          name: install ansible
-          command: apk add --update ansible
-      - run:
-          name: Install tar utility
+          name: install ansiple
           command: |
-            apk add --update tar gzip
-            apk add --update npm nodejs
+            sudo apt update
+            sudo apt upgrade
+            sudo apt -y install software-properties-common
+            sudo apt-add-repository -y ppa:ansible/ansible
+            sudo apt install ansible
+      - run:
+          name: install pm2
+          command: sudo npm install pm2 -g
       - run:
           name: deploy backend
           command: |
@@ -319,7 +341,9 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-            
+      - destroy-frontend
+
+
   backend-smoke-test:
     docker:
       - image: circleci/node:13.8.0
