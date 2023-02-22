@@ -287,7 +287,8 @@ jobs:
           name: Install tar utility
           command: |
             apk add --update tar gzip
-          # apk add --update nodejs npm
+            apk add --update npm 
+          #nodejs
       - run:
           name: deploy backend
           command: |
