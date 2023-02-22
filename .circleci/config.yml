@@ -342,7 +342,7 @@ jobs:
           #     return 1
           # fi
       - destroy-frontend
-      - destroy-infrastructure
+      #- destroy-infrastructure
   frontend-smoke-test:
     docker:
       - image: circleci/node:13.8.0
