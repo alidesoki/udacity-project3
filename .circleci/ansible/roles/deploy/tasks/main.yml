@@ -2,13 +2,13 @@
   - name: Copy files
     become: true
     copy:
-      src: /root/project/artifact.tar.gz
+      src: ~/artifact.tar.gz
       dest: /home/ubuntu/artifact.tar.gz
   - name: Unarchive
     become: true
     shell : |
         cd /home/ubuntu/
-        tar xvzf artifact.tar.gz -C .
+        tar -xvzf artifact.tar.gz -C .
 
   - name: "run server"
     become: true
