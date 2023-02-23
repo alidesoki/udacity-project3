@@ -311,7 +311,7 @@ jobs:
   #           ansible-playbook -i inventory.txt deploy-backend.yml
   deploy-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: mareimorsy/aws-node
     steps:
       - checkout
       - attach_workspace:
@@ -323,12 +323,10 @@ jobs:
           command: |
             sudo apt update
             sudo apt upgrade
-            sudo apt -y install software-properties-common
-            sudo apt-add-repository -y ppa:ansible/ansible
-            sudo apt install ansible
-      - run:
-          name: install pm2
-          command: sudo npm install pm2 -g
+            # sudo apt -y install software-properties-common
+            # sudo apt-add-repository -y ppa:ansible/ansible
+            # sudo apt install ansible
+      
       - run:
           name: deploy backend
           no_output_timeout: 30m
