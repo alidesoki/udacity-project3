@@ -2,7 +2,7 @@
   - name: Copy files
     become: true
     copy:
-      src: ~/artifact.tar.gz
+      src: /home/circleci/artifact.tar.gz
       dest: /home/ubuntu/artifact.tar.gz
   - name: Unarchive
     become: true
