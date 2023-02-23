@@ -311,7 +311,7 @@ jobs:
   #           ansible-playbook -i inventory.txt deploy-backend.yml
   deploy-backend:
     docker:
-      - image: circleci/node
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - attach_workspace:
@@ -331,11 +331,12 @@ jobs:
           command: sudo npm install pm2 -g
       - run:
           name: deploy backend
+          no_output_timeout: 30m
           command: |
-            # cd backend
-            # npm i
-            # npm run build
-            # cd ..
+            cd backend
+            npm i
+            npm run build
+            cd ..
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
