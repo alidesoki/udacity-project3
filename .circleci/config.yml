@@ -178,7 +178,7 @@ jobs:
     steps: 
       - checkout
       - add_ssh_keys:
-          fingerprints: [ed:f6:06:cd:4a:6c:7c:b5:97:b8:c4:f7:03:6b:a7:7d]
+          fingerprints: [d6:b4:4d:76:3c:1f:87:57:7a:ce:42:5f:20:14:ee:f7]
       - attach_workspace:
           at: ~/
       - run:
@@ -317,7 +317,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
-          fingerprints: [ed:f6:06:cd:4a:6c:7c:b5:97:b8:c4:f7:03:6b:a7:7d]
+          fingerprints: [d6:b4:4d:76:3c:1f:87:57:7a:ce:42:5f:20:14:ee:f7]
       - run:
           name: install ansiple
           command: |
