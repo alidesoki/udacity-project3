@@ -7,7 +7,7 @@
   - name: "upgrade packages"
     become: true
     apt:
-      upgrade: yes
+      upgrade: dist
   
   - name: "install dependencies."
     become: true
