@@ -171,24 +171,28 @@ jobs:
       - destroy-infrastructure
   
   configure-infrastructure:
-    docker: 
-      - image: python:3.7-alpine3.11
-     # - image: python:3.7.16-alpine3.17
-      
-    steps: 
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: [d6:b4:4d:76:3c:1f:87:57:7a:ce:42:5f:20:14:ee:f7]
       - attach_workspace:
           at: ~/
+      - add_ssh_keys:
+          fingerprints: [d6:b4:4d:76:3c:1f:87:57:7a:ce:42:5f:20:14:ee:f7]
       - run:
-          name: install dependencies
+          name: install ansiple
           command: |
-            apk add curl
-            apk add --upgrade bash
-            apk add --update ansible
-            apk add openssh-client
-            pip3 install awscli
+            sudo apt update
+            sudo apt upgrade
+            sudo apt -y install software-properties-common
+            sudo apt-add-repository -y ppa:ansible/ansible
+            sudo apt install ansibles
+      - run:
+          name: install aws cli
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       
       - run: cat ~/project/.circleci/ansible/inventory.txt
       - run:
@@ -276,42 +280,10 @@ jobs:
       - destroy-infrastructure
       - destroy-frontend
      
-  # deploy-backend:
-  #   docker: 
-  #     #- image: python:3.7.16-alpine3.17
-  #     - image: python:3.7-alpine3.11
-
-  #   steps: 
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: [ed:f6:06:cd:4a:6c:7c:b5:97:b8:c4:f7:03:6b:a7:7d]
-  #     # - restore_cache:
-  #     #     keys: [backend-build]
-  #     - attach_workspace:
-  #         at: ~/
-  #     - run:
-  #         name: install ansible
-  #         command: apk add --update ansible
-  #     - run:
-  #         name: Install tar utility
-  #         command: |
-  #           apk add --update tar gzip
-  #           apk add --update npm nodejs
-  #     - run:
-  #         name: deploy backend
-  #         command: |
-  #           cd backend
-  #           npm i
-  #           npm run build
-  #           cd ..
-  #           tar -C backend -czvf artifact.tar.gz .
-  #           cd .circleci/ansible
-  #           echo "Contents  of the inventory.txt file is -------"
-  #           cat inventory.txt
-  #           ansible-playbook -i inventory.txt deploy-backend.yml
+  
   deploy-backend:
     docker:
-      - image: mareimorsy/aws-node
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - attach_workspace:
@@ -323,10 +295,10 @@ jobs:
           command: |
             sudo apt update
             sudo apt upgrade
-            # sudo apt -y install software-properties-common
-            # sudo apt-add-repository -y ppa:ansible/ansible
-            # sudo apt install ansible
-      
+            sudo apt -y install software-properties-common
+            sudo apt-add-repository -y ppa:ansible/ansible
+            sudo apt install ansible
+
       - run:
           name: deploy backend
           no_output_timeout: 30m
