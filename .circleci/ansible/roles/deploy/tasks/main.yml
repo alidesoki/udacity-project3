@@ -10,11 +10,22 @@
         cd /home/ubuntu/
         tar -xvzf artifact.tar.gz -C .
 
+  - name: "install dependancies"
+    become: true
+    shell : |
+        npm install
+        
+  
   - name: "run server"
     become: true
     shell : |
-        cd /home/ubuntu/
-        npm install
+        export TYPEORM_ENTITIES=./backend/dist/modules/domain/**/*.entity{.ts,.js}
+        export TYPEORM_HOST=localhost
+        export TYPEORM_PORT=5532
+        export TYPEORM_USERNAME=postgres
+        export TYPEORM_PASSWORD=password
+        export TYPEORM_DATABASE=postgres
+        export TYPEORM_MIGRATIONS_DIR=./backend/dist/migrations
+        export TYPEORM_MIGRATIONS=./backend/dist/migrations/*.ts
         pm2 stop default
         pm2 start npm -- start
-    
