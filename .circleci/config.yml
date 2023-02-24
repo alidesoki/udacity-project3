@@ -436,31 +436,31 @@ workflows:
   #     - audit-backend:
   #         requires:
   #           - test-backend
-  #     - get_last_deployment_id:
-  #         requires: 
-  #           - audit-frontend
-  #           - audit-backend
+ 
       - deploy-infrastructure
-          # requires:
-          #   - get_last_deployment_id
-      # - create-s3-bucket:
-      #     requires:
-      #       - get_last_deployment_id 
+        #  -requires:
+        #     - audit-backend
+        #     - audit-frontend
+      - create-s3-bucket
+          # -requires:
+          #   - audit-backend
+          #   - audit-frontend
       - configure-infrastructure:
           requires:
             - deploy-infrastructure
       - run-migrations:
           requires:
             - configure-infrastructure
-      # - deploy-frontend:
-      #     requires:
-      #       - run-migrations
+      - deploy-frontend:
+          requires:
+            - create-s3-bucket
+            - deploy-infrastructure
       - deploy-backend:
           requires: 
             - run-migrations
-      # - frontend-smoke-test:
-      #     requires:
-      #       - deploy-frontend
+      - frontend-smoke-test:
+          requires:
+            - deploy-frontend
       - backend-smoke-test:
           requires:
             - deploy-backend
