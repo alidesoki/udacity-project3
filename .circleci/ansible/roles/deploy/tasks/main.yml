@@ -20,10 +20,10 @@
     become: true
     shell : |
         export TYPEORM_ENTITIES=./backend/dist/modules/domain/**/*.entity{.ts,.js}
-        export TYPEORM_HOST=localhost
-        export TYPEORM_PORT=5532
+        export TYPEORM_HOST=database-1.chfm6ecrzmdb.us-east-1.rds.amazonaws.com
+        export TYPEORM_PORT=5432
         export TYPEORM_USERNAME=postgres
-        export TYPEORM_PASSWORD=password
+        export TYPEORM_PASSWORD=mypassword
         export TYPEORM_DATABASE=postgres
         export TYPEORM_MIGRATIONS_DIR=./backend/dist/migrations
         export TYPEORM_MIGRATIONS=./backend/dist/migrations/*.ts
