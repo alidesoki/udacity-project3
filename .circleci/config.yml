@@ -429,10 +429,10 @@ workflows:
             - build-backend
       - audit-frontend:
           requires:
-            - test-frontend
+            - build-frontend
       - audit-backend:
           requires:
-            - test-backend
+            - build-backend
  
       - deploy-infrastructure:
           filters:
