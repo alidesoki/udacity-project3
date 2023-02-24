@@ -377,9 +377,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run: 
-          name: install tar and gzip
-          command: yum install tar gzip
       - run:
           name: Save Old Workflow ID to kvdb.io
           command: |
