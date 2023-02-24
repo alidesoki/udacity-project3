@@ -434,37 +434,37 @@ workflows:
   #         requires:
   #           - test-backend
  
-      # - deploy-infrastructure
+      - deploy-infrastructure:
         #  -requires:
         #     - audit-backend
         #     - audit-frontend
-      # - create-s3-bucket
+      - create-s3-bucket:
           # -requires:
           #   - audit-backend
           #   - audit-frontend
-      # - configure-infrastructure:
-      #     requires:
-      #       - deploy-infrastructure
-      # - run-migrations:
-      #     requires:
-      #       - configure-infrastructure
-      # - deploy-frontend:
-      #     requires:
-      #       - create-s3-bucket
-      #       - deploy-infrastructure
-      # - deploy-backend:
-      #     requires: 
-      #       - run-migrations
-      # - frontend-smoke-test:
-      #     requires:
-      #       - deploy-frontend
-      # - backend-smoke-test:
-      #     requires:
-      #       - deploy-backend
-      - cloudfront-update
-      #     requires:
-      #       - frontend-smoke-test
-      #       - backend-smoke-test
+      - configure-infrastructure:
+          requires:
+            - deploy-infrastructure
+      - run-migrations:
+          requires:
+            - configure-infrastructure
+      - deploy-frontend:
+          requires:
+            - create-s3-bucket
+            - deploy-infrastructure
+      - deploy-backend:
+          requires: 
+            - run-migrations
+      - frontend-smoke-test:
+          requires:
+            - deploy-frontend
+      - backend-smoke-test:
+          requires:
+            - deploy-backend
+      - cloudfront-update:
+          requires:
+            - frontend-smoke-test
+            - backend-smoke-test
       - cleanup:
           requires:
             - cloudfront-update
