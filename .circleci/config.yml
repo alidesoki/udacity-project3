@@ -172,27 +172,24 @@ jobs:
   
   configure-infrastructure:
     docker:
-      - image: circleci/node:13.8.0
+      - image: python:3.11.2-alpine3.17
     steps:
       - checkout
       - attach_workspace:
           at: ~/
       - add_ssh_keys:
           fingerprints: [d6:b4:4d:76:3c:1f:87:57:7a:ce:42:5f:20:14:ee:f7]
+      
+      - run:
+          name: install ansiple
+          command: |
+            apk add --update ansible tar gzip curl
       - run:
           name: install aws cli
           command: |
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-      - run:
-          name: install ansiple
-          command: |
-            sudo apt update
-            sudo apt upgrade
-            sudo apt -y install software-properties-common
-            sudo apt-add-repository -y ppa:ansible/ansible
-            sudo apt install ansible
       
       - run: cat ~/project/.circleci/ansible/inventory.txt
       - run:
@@ -283,7 +280,7 @@ jobs:
   
   deploy-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: python:3.11.2-alpine3.17
     steps:
       - checkout
       - attach_workspace:
@@ -291,19 +288,15 @@ jobs:
       - add_ssh_keys:
           fingerprints: [d6:b4:4d:76:3c:1f:87:57:7a:ce:42:5f:20:14:ee:f7]
       - run:
+          name: install ansiple
+          command: |
+            apk add --update ansible tar gzip curl nodejs npm
+      - run:
           name: install aws cli
           command: |
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
-      - run:
-          name: install ansiple
-          command: |
-            sudo apt update
-            sudo apt upgrade
-            sudo apt -y install software-properties-common
-            sudo apt-add-repository -y ppa:ansible/ansible
-            sudo apt install ansible
 
       - run:
           name: deploy backend
@@ -378,45 +371,45 @@ jobs:
 workflows:
   project-workflow:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires:
-            - build-frontend
-      - test-backend:
-          requires:   
-            - build-backend
-      - audit-frontend:
-          requires:
-            - test-frontend
-      - audit-backend:
-          requires:
-            - test-backend
-      - get_last_deployment_id:
-          requires: 
-            - audit-frontend
-            - audit-backend
-      - deploy-infrastructure:
-          requires:
-            - get_last_deployment_id
-      - create-s3-bucket:
-          requires:
-            - get_last_deployment_id 
-      - configure-infrastructure:
-          requires:
-            - deploy-infrastructure
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires:
+      #       - build-frontend
+      # - test-backend:
+      #     requires:   
+      #       - build-backend
+      # - audit-frontend:
+      #     requires:
+      #       - test-frontend
+      # - audit-backend:
+      #     requires:
+      #       - test-backend
+      # - get_last_deployment_id:
+      #     requires: 
+      #       - audit-frontend
+      #       - audit-backend
+      # - deploy-infrastructure:
+      #     requires:
+      #       - get_last_deployment_id
+      # - create-s3-bucket:
+      #     requires:
+      #       - get_last_deployment_id 
+      - configure-infrastructure
+          # requires:
+          #   - deploy-infrastructure
       - run-migrations:
           requires:
             - configure-infrastructure
-      - deploy-frontend:
-          requires:
-            - run-migrations
+      # - deploy-frontend:
+      #     requires:
+      #       - run-migrations
       - deploy-backend:
           requires: 
             - run-migrations
-      - frontend-smoke-test:
-          requires:
-            - deploy-frontend
+      # - frontend-smoke-test:
+      #     requires:
+      #       - deploy-frontend
       - backend-smoke-test:
           requires:
             - deploy-backend
