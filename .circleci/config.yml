@@ -434,73 +434,73 @@ workflows:
       #     requires:
       #       - build-backend
  
-      # - deploy-infrastructure:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #         - audit-backend
-      #         - audit-frontend
-      # - create-s3-bucket:
-      #     requires:
-      #       - audit-backend
-      #       - audit-frontend
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      # - configure-infrastructure:
-      #     requires:
-      #       - deploy-infrastructure
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      # - run-migrations:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - configure-infrastructure
-      - deploy-frontend
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - create-s3-bucket
-      #       - deploy-infrastructure
-      # - deploy-backend:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires: 
-      #       - run-migrations
-      # - frontend-smoke-test:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - deploy-frontend
-      # - backend-smoke-test:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - deploy-backend
-      # - cloudfront-update:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - main
-      #     requires:
-      #       - frontend-smoke-test
-      #       - backend-smoke-test
+      - deploy-infrastructure:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+              - audit-backend
+              - audit-frontend
+      - create-s3-bucket:
+          requires:
+            - audit-backend
+            - audit-frontend
+          filters:
+            branches:
+              only:
+                - main
+      - configure-infrastructure:
+          requires:
+            - deploy-infrastructure
+          filters:
+            branches:
+              only:
+                - main
+      - run-migrations:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - configure-infrastructure
+      - deploy-frontend:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - create-s3-bucket
+            - deploy-infrastructure
+      - deploy-backend:
+          filters:
+            branches:
+              only:
+                - main
+          requires: 
+            - run-migrations
+      - frontend-smoke-test:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy-frontend
+      - backend-smoke-test:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy-backend
+      - cloudfront-update:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - frontend-smoke-test
+            - backend-smoke-test
       # - cleanup:
       #     filters:
       #       branches:
