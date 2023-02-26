@@ -294,7 +294,7 @@ jobs:
             npm run build
             echo build successful
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://"udapeople-93c0562" --recursive
+            aws s3 cp dist s3://"udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
       # - destroy-infrastructure
       # - destroy-frontend
      
