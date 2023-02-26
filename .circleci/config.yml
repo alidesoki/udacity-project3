@@ -443,9 +443,9 @@ workflows:
           #     - audit-backend
           #     - audit-frontend
       - create-s3-bucket:
-          requires:
-            - audit-backend
-            - audit-frontend
+          # requires:
+          #   - audit-backend
+          #   - audit-frontend
           filters:
             branches:
               only:
